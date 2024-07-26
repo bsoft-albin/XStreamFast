@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using XStreamFast.Frameworks.CommonProps;
 
 namespace XStreamFast.Api.Controllers
 {
-    [Route("api/[controller]/[action]")]
     [ApiController]
+    [ApiVersion(XStreamFastApiRoutes.Versions.Latest)]
+    [Route(XStreamFastApiRoutes.Templates.ApiVersionTemplate)]
     public class WelcomeController : ControllerBase
     {
         [HttpGet]

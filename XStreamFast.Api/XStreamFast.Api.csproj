@@ -4,6 +4,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -20,6 +21,11 @@
 
   <ItemGroup>
     <ProjectReference Include="..\XStreamFast.Services\XStreamFast.Services.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="ErrorLogsDirectory\" />
+    <Folder Include="Features\" />
   </ItemGroup>
 
 </Project>

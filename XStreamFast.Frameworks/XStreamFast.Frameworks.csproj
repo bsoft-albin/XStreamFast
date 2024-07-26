@@ -12,8 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="CommonMeths\" />
-    <Folder Include="CommonProps\" />
+    <Folder Include="Components\" />
   </ItemGroup>
 
 </Project>
