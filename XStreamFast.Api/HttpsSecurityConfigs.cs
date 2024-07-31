@@ -1,5 +1,8 @@
 ﻿namespace XStreamFast.Api
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class HttpsRefererMiddleware
     {
         private readonly RequestDelegate _next;
