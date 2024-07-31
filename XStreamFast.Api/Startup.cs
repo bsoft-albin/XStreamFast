@@ -1,10 +1,14 @@
 ﻿using AspNetCoreRateLimit;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.AspNetCore.ResponseCompression;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using System.IO.Compression;
 using System.Reflection;
+using System.Text;
 using XStreamFast.Frameworks.CommonMeths;
 using XStreamFast.Frameworks.CommonProps;
 
@@ -105,6 +109,55 @@ namespace XStreamFast.Api
                  $"{Assembly.GetExecutingAssembly().GetName().Name}.xml"));
 
                 c.OperationFilter<SwaggerDefaultValues>();
+
+                c.DocumentFilter<PathLowercaseDocumentFilter>();
+
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer"
+                });
+
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement()
+                    {
+                        {
+                            new OpenApiSecurityScheme
+                            {
+                                Reference = new OpenApiReference
+                                {
+                                    Type = ReferenceType.SecurityScheme,
+                                    Id = "Bearer"
+                                },
+                                Scheme = "OAuth2",
+                                Name = "Bearer",
+                                In = ParameterLocation.Header
+                            },
+                            new List<string>()
+                        }
+                 });
+            });
+
+            services.AddAuthentication(cfg => {
+                cfg.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                cfg.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                cfg.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(x => {
+                x.RequireHttpsMetadata = false;
+                x.SaveToken = false;
+                x.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(
+                        Encoding.UTF8
+                        .GetBytes(config["JWTSetting:SecurityKey"] ?? "XZweufywefweRTYUIYRWEUY")
+                    ),
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    ClockSkew = TimeSpan.Zero
+                };
             });
 
             // Add HttpClient for third-party API calling
@@ -113,7 +166,7 @@ namespace XStreamFast.Api
             // CORS policy configuration to allow any origin
             services.AddCors(options =>
             {
-                options.AddPolicy(AppServerProps.Startup.CORS_POLICY, builder =>
+                options.AddPolicy(AppProps.Startup.CORS_POLICY, builder =>
                 {
                     builder.AllowAnyOrigin()
                            .AllowAnyMethod()
@@ -165,7 +218,7 @@ namespace XStreamFast.Api
 
             webApp.UseAuthorization();
 
-            webApp.UseCors(AppServerProps.Startup.CORS_POLICY);
+            webApp.UseCors(AppProps.Startup.CORS_POLICY);
 
             webApp.UseStaticFiles();// for serving static files in Server.
 

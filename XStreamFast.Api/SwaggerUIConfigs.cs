@@ -23,7 +23,7 @@ namespace XStreamFast.Api
             {
                 options.SwaggerDoc(description.GroupName, new OpenApiInfo
                 {
-                    Title = $".NET Core Api {description.ApiVersion}",
+                    Title = $"XStreamFast Api {description.ApiVersion}",
                     Version = description.ApiVersion.ToString(),
                     Contact = new OpenApiContact { Name = "Albin Anthony", Email = "albintony2002@gmail.com" },
                     License = new OpenApiLicense() { Name = "GitHub", Url = new Uri("https://github.com/") }
@@ -60,4 +60,33 @@ namespace XStreamFast.Api
             }
         }
     }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public class PathLowercaseDocumentFilter : IDocumentFilter
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="swaggerDoc"></param>
+        /// <param name="context"></param>
+        public void Apply(OpenApiDocument swaggerDoc, DocumentFilterContext context)
+        {
+            var dictionaryPath = swaggerDoc.Paths.ToDictionary(x => ToLowercase(x.Key), x => x.Value);
+            var newPaths = new OpenApiPaths();
+            foreach (var path in dictionaryPath)
+            {
+                newPaths.Add(path.Key, path.Value);
+            }
+            swaggerDoc.Paths = newPaths;
+        }
+
+        private static string ToLowercase(string key)
+        {
+            var parts = key.Split('/').Select(part => part.Contains('}') ? part : part.ToLowerInvariant());
+            return string.Join('/', parts);
+        }
+    }
+
 }

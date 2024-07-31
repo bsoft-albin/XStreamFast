@@ -1,6 +1,6 @@
 ﻿namespace XStreamFast.Frameworks.CommonProps
 {
-    public class AppServerProps
+    public class AppProps
     {
         public static class Startup
         {

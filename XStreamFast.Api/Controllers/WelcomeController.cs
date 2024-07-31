@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using XStreamFast.Frameworks.CommonProps;
 
 namespace XStreamFast.Api.Controllers
@@ -6,6 +7,7 @@ namespace XStreamFast.Api.Controllers
     /// <summary>
     /// A Welcome Controller for XStreamFast Web Services.
     /// </summary>
+    [Authorize]
     [ApiController]
     [ApiVersion(XStreamFastApiRoutes.Versions.Latest)]
     [ApiVersion(XStreamFastApiRoutes.Versions.DEFAULT)]

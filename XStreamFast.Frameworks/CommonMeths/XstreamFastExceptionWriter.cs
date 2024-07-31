@@ -5,7 +5,7 @@ namespace XStreamFast.Frameworks.CommonMeths
 
     public static class ErrorLogger
     {
-        static public String _contentRootPath = String.Empty;
+        static private String _contentRootPath = String.Empty;
         public static void Initialize(IHostEnvironment hostingEnvironment)
         {
             _contentRootPath = hostingEnvironment.ContentRootPath;
@@ -29,7 +29,7 @@ namespace XStreamFast.Frameworks.CommonMeths
             try
             {
                 using StreamWriter writer = new(FinallogFilePath, append: true);
-                await writer.WriteLineAsync($"[Error Timestamp: {DateTime.UtcNow}]");
+                await writer.WriteLineAsync($"[Error Timestamp: {DateTime.UtcNow:dd-MM-yyyy} {DateTime.UtcNow.Hour.ToString() + ":" + DateTime.UtcNow.Minute.ToString() + ":" + DateTime.UtcNow.Minute.ToString() + " " + DateTime.UtcNow.ToString("tt", System.Globalization.CultureInfo.InvariantCulture)}]");
                 await writer.WriteLineAsync($"Message: {message}");
                 await writer.WriteLineAsync($"Source: {exception.Source}");
                 await writer.WriteLineAsync($"StackTrace: {exception.StackTrace}");

@@ -73,9 +73,11 @@ namespace XStreamFast.Api
                     },
                     onHalfOpen: () => {
                         Console.WriteLine("Circuit is half-open. Testing for recovery.");
-                    });
+                 });
 
             services.AddSingleton(circuitBreakerPolicy);
+
+            services.AddTransient<JWTTokenService>();
 
         }
     }
