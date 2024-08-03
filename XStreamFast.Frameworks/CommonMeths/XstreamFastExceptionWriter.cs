@@ -16,7 +16,7 @@ namespace XStreamFast.Frameworks.CommonMeths
         /// </summary>
         /// <param name="message">Takes the message from the Exception cause.</param>
         /// <param name="exception">Gets the Actaul Exception message</param>
-        public static async Task WriteLog(String message, Exception exception)
+        public static async Task WriteLog(Exception exception, String message = "")
         {
             String logFolderPathWithMonthAndyear = Path.Combine(Path.Combine(_contentRootPath, "ErrorLogsDirectory"), DateTime.UtcNow.ToString("yyyy-MM"));
             // Check if the subfolder exists, create it if not

@@ -4,6 +4,10 @@ using Polly.CircuitBreaker;
 using Polly;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using XStreamFast.DbEngine;
+using XStreamFast.Repositories.Interfaces;
+using XStreamFast.Repositories.Implementations;
+using XStreamFast.Services.Implementations;
+using XStreamFast.Services.Interfaces;
 
 namespace XStreamFast.Api
 {
@@ -27,21 +31,21 @@ namespace XStreamFast.Api
         //DbEngine Layer Registering
         private static void AddDbEngineLayerServices(IServiceCollection services)
         {
-            //services.AddTransient<IPostgresDapper, PostgresHandler>();
+            services.AddScoped<IPostgresMapper, PostgresMapper>();
             //services.AddTransient<IMysqlDapper, MysqlHandler>();
-            services.AddTransient<ISqlServerDapper, SqlServerDapper>();
+            services.AddTransient<ISqlServerMapper, SqlServerMapper>();
         }
 
         //Repository Layer Registering
         private static void AddRepositoryLayerServices(IServiceCollection services)
         {
-            
+            services.AddScoped<IPostgresRepo, PostgresRepo>();
         }
 
         //Services Layer Registering
         private static void AddServiceLayerServices(IServiceCollection services)
         {
-           
+            services.AddScoped<IPostgresServices, PostgresServices>();
         }
 
         //To Register Other Services

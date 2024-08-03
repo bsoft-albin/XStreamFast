@@ -1,0 +1,4 @@
+﻿namespace XStreamFast.Models.Responses
+{
+    
+}

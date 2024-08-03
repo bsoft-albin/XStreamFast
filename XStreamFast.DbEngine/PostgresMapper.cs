@@ -1,11 +1,11 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using static Dapper.SqlMapper;
 using System.Data;
-using System.Data.SqlClient;
-using static Dapper.SqlMapper;
+using Npgsql;
+using Microsoft.Extensions.Configuration;
 
 namespace XStreamFast.DbEngine
 {
-    public interface ISqlServerMapper
+    public interface IPostgresMapper
     {
         IDbConnection Connection { get; }
 
@@ -26,8 +26,7 @@ namespace XStreamFast.DbEngine
 
         object ExecuteScalar(string script);
     }
-
-    public class SqlServerMapper(IConfiguration configuration) : ISqlServerMapper
+    public class PostgresMapper(IConfiguration configuration) : IPostgresMapper
     {
         private readonly IConfiguration _configuration = configuration;
 
@@ -35,7 +34,7 @@ namespace XStreamFast.DbEngine
         {
             get
             {
-                var sqlconnection = new SqlConnection(_configuration.GetConnectionString("ConnString"));
+                var sqlconnection = new NpgsqlConnection(_configuration.GetConnectionString("PostgresConnString"));
                 return sqlconnection;
             }
         }
