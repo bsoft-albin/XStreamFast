@@ -9,7 +9,6 @@ using Microsoft.OpenApi.Models;
 using System.IO.Compression;
 using System.Reflection;
 using System.Text;
-using XStreamFast.Frameworks.CommonMeths;
 using XStreamFast.Frameworks.CommonProps;
 
 namespace XStreamFast.Api
@@ -38,6 +37,15 @@ namespace XStreamFast.Api
             webApp = webAppBuilder.Build();
             iWebHostEnvironment = webApp.Environment;
             ConfigServer();
+        }
+
+        /// <summary>
+        /// Returns the Configured Web App.
+        /// </summary>
+        /// <returns></returns>
+        public WebApplication GetConfiguredWebApp() { 
+        
+            return webApp;
         }
 
         private void ConfigServices()
@@ -177,9 +185,6 @@ namespace XStreamFast.Api
 
         private void ConfigServer()
         {
-            // Initialize LogHelper with hosting environment
-            ErrorLogger.Initialize(webApp.Services.GetRequiredService<IHostEnvironment>());
-
             //configuring the WebSockets Middleware
             //webApp.UseWebSockets();
 

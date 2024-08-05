@@ -31,11 +31,12 @@ namespace XStreamFast.Frameworks.CommonMeths
                 using StreamWriter writer = new(FinallogFilePath, append: true);
                 await writer.WriteLineAsync($"[Error Timestamp: {DateTime.UtcNow:dd-MM-yyyy} {DateTime.UtcNow.Hour.ToString() + ":" + DateTime.UtcNow.Minute.ToString() + ":" + DateTime.UtcNow.Minute.ToString() + " " + DateTime.UtcNow.ToString("tt", System.Globalization.CultureInfo.InvariantCulture)}]");
                 await writer.WriteLineAsync($"Message: {message}");
+                await writer.WriteLineAsync($"Exception: {exception.Message}");
                 await writer.WriteLineAsync($"Source: {exception.Source}");
                 await writer.WriteLineAsync($"StackTrace: {exception.StackTrace}");
                 await writer.WriteLineAsync($"TargetSite: {exception.TargetSite}");
-                await writer.WriteLineAsync($"Exception: {exception?.ToString()}");
-                await writer.WriteLineAsync(new String('-', 150)); // Separator for readability
+                
+                await writer.WriteLineAsync(new String('-', 200)); // Separator for readability
             }
             catch (Exception ex)
             {
