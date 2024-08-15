@@ -7,7 +7,7 @@ namespace XStreamFast.Api.Controllers
     /// <summary>
     /// A Welcome Controller for XStreamFast Web Services.
     /// </summary>
-    [Authorize]
+    [AllowAnonymous]
     [ApiController]
     [ApiVersion(XStreamFastApiRoutes.Versions.Latest)]
     [ApiVersion(XStreamFastApiRoutes.Versions.DEFAULT)]
