@@ -1,4 +1,5 @@
 ﻿using AspNetCoreRateLimit;
+using Google.Protobuf.WellKnownTypes;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
@@ -224,6 +225,19 @@ namespace XStreamFast.Api
             webApp.UseAuthorization();
 
             webApp.UseCors(AppProps.Startup.CORS_POLICY);
+
+            webApp.Use(async (context, next) =>
+            {
+                #pragma warning disable
+                context.Response.Headers.Add("Content-Security-Policy", "default-src 'self';");
+                context.Response.Headers.Add("X-Content-Type-Options", "nosniff");
+                context.Response.Headers.Add("X-Frame-Options", "DENY");
+                context.Response.Headers.Add("X-XSS-Protection", "1; mode=block");
+                context.Response.Headers.Add("Referrer-Policy", "no-referrer");
+                context.Response.Headers.Add("Permissions-Policy", "geolocation=(self), microphone=()");
+
+                await next();
+            });
 
             webApp.UseStaticFiles();// for serving static files in Server.
 
