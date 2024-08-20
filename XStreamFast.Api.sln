@@ -3,21 +3,23 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.10.34928.147
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XStreamFast.Api", "XStreamFast.Api\XStreamFast.Api.csproj", "{6000062D-C241-4DD0-B53D-858123D4B9AA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XStreamFast.Api", "XStreamFast.Api\XStreamFast.Api.csproj", "{6000062D-C241-4DD0-B53D-858123D4B9AA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XStreamFast.DbEngine", "XStreamFast.DbEngine\XStreamFast.DbEngine.csproj", "{38D02BCF-3EFE-43D0-8C6F-F388CF9E98FF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XStreamFast.DbEngine", "XStreamFast.DbEngine\XStreamFast.DbEngine.csproj", "{38D02BCF-3EFE-43D0-8C6F-F388CF9E98FF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XStreamFast.Services", "XStreamFast.Services\XStreamFast.Services.csproj", "{7216111F-1C3B-40AA-9801-A0693FB9AA72}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XStreamFast.Services", "XStreamFast.Services\XStreamFast.Services.csproj", "{7216111F-1C3B-40AA-9801-A0693FB9AA72}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XStreamFast.Repositories", "XStreamFast.Repositories\XStreamFast.Repositories.csproj", "{CF490376-CD26-4C97-A418-AB7F11B92128}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XStreamFast.Repositories", "XStreamFast.Repositories\XStreamFast.Repositories.csproj", "{CF490376-CD26-4C97-A418-AB7F11B92128}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XStreamFast.Models", "XStreamFast.Models\XStreamFast.Models.csproj", "{FA3A464F-314C-4E52-892D-2665DB69D0BD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XStreamFast.Models", "XStreamFast.Models\XStreamFast.Models.csproj", "{FA3A464F-314C-4E52-892D-2665DB69D0BD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XStreamFast.Frameworks", "XStreamFast.Frameworks\XStreamFast.Frameworks.csproj", "{8CD61704-E56D-4DEC-8634-3F8D6FFC57A8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XStreamFast.Frameworks", "XStreamFast.Frameworks\XStreamFast.Frameworks.csproj", "{8CD61704-E56D-4DEC-8634-3F8D6FFC57A8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XStreamFast.Unit.Tests", "XStreamFast.Unit.Tests\XStreamFast.Unit.Tests.csproj", "{3442775F-1376-4140-9C49-1EBFFBD2EAC5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XStreamFast.Unit.Tests", "XStreamFast.Unit.Tests\XStreamFast.Unit.Tests.csproj", "{3442775F-1376-4140-9C49-1EBFFBD2EAC5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XStreamFast.Integration.Tests", "XStreamFast.Integration.Tests\XStreamFast.Integration.Tests.csproj", "{969F51F6-3B81-4788-8737-94B9CAE1D97F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XStreamFast.Integration.Tests", "XStreamFast.Integration.Tests\XStreamFast.Integration.Tests.csproj", "{969F51F6-3B81-4788-8737-94B9CAE1D97F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XStreamFast.FileServer", "XStreamFast.FileServer\XStreamFast.FileServer.csproj", "{15BC3B11-41FC-4989-8A19-C292EFBD0BC6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -57,6 +59,10 @@ Global
 		{969F51F6-3B81-4788-8737-94B9CAE1D97F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{969F51F6-3B81-4788-8737-94B9CAE1D97F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{969F51F6-3B81-4788-8737-94B9CAE1D97F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{15BC3B11-41FC-4989-8A19-C292EFBD0BC6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{15BC3B11-41FC-4989-8A19-C292EFBD0BC6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{15BC3B11-41FC-4989-8A19-C292EFBD0BC6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{15BC3B11-41FC-4989-8A19-C292EFBD0BC6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

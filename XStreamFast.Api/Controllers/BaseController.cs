@@ -1,11 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using System.Collections;
 using XStreamFast.Frameworks.CommonMeths;
 
 namespace XStreamFast.Api.Controllers
 {
     /// <summary>
-    /// 
+    /// A Base Api Controller for XStreamFast
     /// </summary>
     [ApiController]
     public class BaseController : ControllerBase

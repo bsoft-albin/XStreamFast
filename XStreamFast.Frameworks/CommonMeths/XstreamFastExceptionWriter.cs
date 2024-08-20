@@ -1,14 +1,12 @@
-﻿using Microsoft.Extensions.Hosting;
-
-namespace XStreamFast.Frameworks.CommonMeths
+﻿namespace XStreamFast.Frameworks.CommonMeths
 {
 
     public static class ErrorLogger
     {
         static private String _contentRootPath = String.Empty;
-        public static void Initialize(IHostEnvironment hostingEnvironment)
+        public static void Initialize(string contentPath)
         {
-            _contentRootPath = hostingEnvironment.ContentRootPath;
+            _contentRootPath = contentPath;
         }
 
         /// <summary>
@@ -18,7 +16,7 @@ namespace XStreamFast.Frameworks.CommonMeths
         /// <param name="exception">Gets the Actaul Exception message</param>
         public static async Task WriteLog(Exception exception, String message = "")
         {
-            String logFolderPathWithMonthAndyear = Path.Combine(Path.Combine(_contentRootPath, "ErrorLogsDirectory"), DateTime.UtcNow.ToString("yyyy-MM"));
+            String logFolderPathWithMonthAndyear = Path.Combine(Path.Combine(_contentRootPath, "ErrorLogs"), DateTime.UtcNow.ToString("yyyy-MM"));
             // Check if the subfolder exists, create it if not
             if (!Directory.Exists(logFolderPathWithMonthAndyear))
             {

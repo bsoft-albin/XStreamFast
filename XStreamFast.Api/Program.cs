@@ -7,4 +7,4 @@ ConfigXStreamFastApplicationServer appServer = new(builder);
 WebApplication web = appServer.GetConfiguredWebApp();
 
 // Initialize LogHelper with hosting environment
-ErrorLogger.Initialize(web.Services.GetRequiredService<IHostEnvironment>());
+ErrorLogger.Initialize(HelperMeths.ReplaceLastSegment(web.Services.GetRequiredService<IWebHostEnvironment>().ContentRootPath, "XStreamFast.FileServer"));

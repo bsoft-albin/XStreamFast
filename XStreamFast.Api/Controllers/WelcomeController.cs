@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using XStreamFast.Frameworks.CommonMeths;
 using XStreamFast.Frameworks.CommonProps;
 using XStreamFast.Models.Responses;
 
@@ -13,8 +14,21 @@ namespace XStreamFast.Api.Controllers
     [ApiVersion(XStreamFastApiRoutes.Versions.Latest)]
     [ApiVersion(XStreamFastApiRoutes.Versions.DEFAULT)]
     [Route(XStreamFastApiRoutes.Templates.ApiVersionTemplate)]
-    public class WelcomeController : BaseController
+    public class WelcomeController(IWebHostEnvironment _hostEnvironment) : BaseController
     {
+        private readonly IWebHostEnvironment hostEnvironment = _hostEnvironment;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("/")]
+        public ContentResult HomePage()
+        {
+
+            return HtmlResponseFormatter(HelperMeths.ReadHtmlFileAsString(hostEnvironment.WebRootPath, "index.html"));
+        }
+
         /// <summary>
         /// Endpoint to Welcome User.
         /// </summary>

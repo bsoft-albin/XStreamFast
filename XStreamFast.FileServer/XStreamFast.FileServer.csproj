@@ -7,11 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Components\" />
+    <Folder Include="ErrorLogs\" />
+    <Folder Include="ApiCallLogs\" />
+    <Folder Include="SecureFiles\" />
   </ItemGroup>
 
 </Project>
