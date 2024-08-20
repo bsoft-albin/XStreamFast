@@ -1,8 +1,8 @@
 ﻿using AspNetCoreRateLimit;
-using Google.Protobuf.WellKnownTypes;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.IdentityModel.Tokens;
@@ -55,6 +55,10 @@ namespace XStreamFast.Api
             {
                 // make every controller , need to accept https requests only!!
                 x.Filters.Add(new RequireHttpsAttribute());
+
+                // for Xml type Responses Supported by Controllers
+                x.OutputFormatters.Add(new XmlSerializerOutputFormatter());
+                // need to add my custom class for CSV response formatters
             });
 
             // Enforce HTTPS redirection

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using XStreamFast.Frameworks.CommonProps;
+using XStreamFast.Models.Responses;
 
 namespace XStreamFast.Api.Controllers
 {
@@ -12,7 +13,7 @@ namespace XStreamFast.Api.Controllers
     [ApiVersion(XStreamFastApiRoutes.Versions.Latest)]
     [ApiVersion(XStreamFastApiRoutes.Versions.DEFAULT)]
     [Route(XStreamFastApiRoutes.Templates.ApiVersionTemplate)]
-    public class WelcomeController : ControllerBase
+    public class WelcomeController : BaseController
     {
         /// <summary>
         /// Endpoint to Welcome User.
@@ -69,8 +70,38 @@ namespace XStreamFast.Api.Controllers
         [MapToApiVersion(XStreamFastApiRoutes.Versions.Latest)]
         public String WelcomeUser([FromQuery] String getName)
         {
-
+         
             return $"Welcome {getName} to Our XStreamFast WebServices!!!";
+        }
+
+        [HttpGet("text")]
+        public IActionResult GetTextResponse()
+        {
+            string textContent = "Hello, World!";
+            return TextResponseFormatter(textContent);
+        }
+        [HttpGet("html")]
+        public IActionResult GetHtmlResponse()
+        {
+            string htmlContent = "<html><body><h1>Hello, World!</h1></body></html>";
+            return HtmlResponseFormatter(htmlContent);
+        }
+        [HttpGet("xml")]
+        public IActionResult GetXmlResponse()
+        {
+            var data = new Person { Name = "John", Age = 30 };
+            return XmlResponseFormatter(data);
+        }
+
+        [HttpGet("csv")]
+        public IActionResult GetCsvResponse()
+        {
+            var data = new List<object>
+            {
+                new { Name = "John", Age = 30 },
+                new { Name = "Jane", Age = 25 }
+            };
+            return new CsvResult(data);
         }
     }
 }
