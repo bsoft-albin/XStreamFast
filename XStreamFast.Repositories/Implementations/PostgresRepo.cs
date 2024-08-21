@@ -16,7 +16,7 @@ namespace XStreamFast.Repositories.Implementations
             }
             catch (Exception x)
             {
-                await ErrorLogger.WriteLog(x);
+                await XStreamFastLoggers.WriteExceptionLog(x);
             }
 
             return result;

@@ -13,7 +13,7 @@ namespace XStreamFast.Api
     /// 
     /// </remarks>
     /// <param name="configuration"></param>
-    public class JWTTokenService(IConfiguration configuration)
+    public class JwtTokenService(IConfiguration configuration)
     {
         /// <summary>
         /// 

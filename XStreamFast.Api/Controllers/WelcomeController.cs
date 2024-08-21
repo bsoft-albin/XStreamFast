@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using XStreamFast.Frameworks.CommonMeths;
 using XStreamFast.Frameworks.CommonProps;
-using XStreamFast.Models.Responses;
 
 namespace XStreamFast.Api.Controllers
 {
@@ -22,7 +21,8 @@ namespace XStreamFast.Api.Controllers
         /// 
         /// </summary>
         /// <returns></returns>
-        [HttpGet("/")]
+        [HttpGet]
+        [Route("/")]
         public ContentResult HomePage()
         {
 
@@ -88,34 +88,5 @@ namespace XStreamFast.Api.Controllers
             return $"Welcome {getName} to Our XStreamFast WebServices!!!";
         }
 
-        [HttpGet("text")]
-        public IActionResult GetTextResponse()
-        {
-            string textContent = "Hello, World!";
-            return TextResponseFormatter(textContent);
-        }
-        [HttpGet("html")]
-        public IActionResult GetHtmlResponse()
-        {
-            string htmlContent = "<html><body><h1>Hello, World!</h1></body></html>";
-            return HtmlResponseFormatter(htmlContent);
-        }
-        [HttpGet("xml")]
-        public IActionResult GetXmlResponse()
-        {
-            var data = new Person { Name = "John", Age = 30 };
-            return XmlResponseFormatter(data);
-        }
-
-        [HttpGet("csv")]
-        public IActionResult GetCsvResponse()
-        {
-            var data = new List<object>
-            {
-                new { Name = "John", Age = 30 },
-                new { Name = "Jane", Age = 25 }
-            };
-            return new CsvResult(data);
-        }
     }
 }

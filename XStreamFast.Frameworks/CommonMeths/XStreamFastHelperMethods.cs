@@ -37,17 +37,16 @@ namespace XStreamFast.Frameworks.CommonMeths
 
         public static string ReplaceLastSegment(string path, string newSegment)
         {
-            // Ensure the path ends with a directory separator
-            if (!path.EndsWith(Path.DirectorySeparatorChar.ToString()))
-            {
-                path += Path.DirectorySeparatorChar;
-            }
+            // Ensure the path is not null or empty
+            if (string.IsNullOrEmpty(path)) throw new ArgumentException("Path cannot be null or empty", nameof(path));
 
-            // Get the directory of the path
-            string directory = Path.GetDirectoryName(path);
+            if (string.IsNullOrEmpty(newSegment)) throw new ArgumentException("Path cannot be null or empty", nameof(newSegment));
 
-            // Construct the new path by combining the directory and the new segment
-            string newPath = Path.Combine(directory, newSegment);
+            // Get the directory of the path, which excludes the last segment
+            string directory = Path.GetDirectoryName(path) ?? "";
+
+            // Combine the directory with the new segment
+            string newPath = Path.Combine(directory ?? string.Empty, newSegment);
 
             return newPath;
         }

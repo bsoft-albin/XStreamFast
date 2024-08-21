@@ -24,8 +24,4 @@
     <ProjectReference Include="..\XStreamFast.Services\XStreamFast.Services.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="ErrorLogsDirectory\" />
-  </ItemGroup>
-
 </Project>

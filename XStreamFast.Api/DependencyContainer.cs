@@ -81,7 +81,7 @@ namespace XStreamFast.Api
 
             services.AddSingleton(circuitBreakerPolicy);
 
-            services.AddTransient<JWTTokenService>();
+            services.AddTransient<JwtTokenService>();
 
         }
     }

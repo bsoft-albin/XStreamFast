@@ -8,7 +8,7 @@ namespace XStreamFast.Api.Controllers
     /// <summary>
     /// 
     /// </summary>
-    [Authorize]
+    [AllowAnonymous]
     [ApiController]
     [ApiVersion(XStreamFastApiRoutes.Versions.Latest)]
     [Route(XStreamFastApiRoutes.Templates.ApiVersionTemplate)]

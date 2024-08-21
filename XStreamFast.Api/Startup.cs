@@ -10,6 +10,7 @@ using Microsoft.OpenApi.Models;
 using System.IO.Compression;
 using System.Reflection;
 using System.Text;
+using XStreamFast.Frameworks.CommonMeths;
 using XStreamFast.Frameworks.CommonProps;
 
 namespace XStreamFast.Api
@@ -17,27 +18,29 @@ namespace XStreamFast.Api
     /// <summary>
     /// A Primary Class for Constructing XStreamFast Application Server.
     /// </summary>
-    public class ConfigXStreamFastApplicationServer
+    public class ConfigXStreamFastWebApplication
     {
         private readonly WebApplication webApp;
         //private readonly IConfiguration config;
         //Using private readonly IApplicationBuilder webApp;    ==> (Legacy Approach in .NET 5 and Earlier)
         private readonly ConfigurationManager config;
         private readonly IServiceCollection services;
-        private readonly IWebHostEnvironment iWebHostEnvironment;
+        private readonly IServiceProvider provider;
+        private readonly IWebHostEnvironment hostEnvironment;
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="webAppBuilder"></param>
-        public ConfigXStreamFastApplicationServer(WebApplicationBuilder webAppBuilder)
+        public ConfigXStreamFastWebApplication(WebApplicationBuilder webAppBuilder)
         {
             services = webAppBuilder.Services;
             config = webAppBuilder.Configuration;
             ConfigServices();
             webApp = webAppBuilder.Build();
-            iWebHostEnvironment = webApp.Environment;
-            ConfigServer();
+            provider = webApp.Services;
+            hostEnvironment = webApp.Environment;
+            ConfigLoggers();
         }
 
         /// <summary>
@@ -47,6 +50,25 @@ namespace XStreamFast.Api
         public WebApplication GetConfiguredWebApp() { 
         
             return webApp;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private void ConfigLoggers()
+        {
+            string getRootPath = provider.GetRequiredService<IWebHostEnvironment>().ContentRootPath;
+            try
+            {
+                string getFullPath = HelperMeths.ReplaceLastSegment(getRootPath, "XStreamFast.FileServer");
+                XStreamFastLoggers.Initialize(getFullPath);
+            }
+            catch (Exception x)
+            {
+                Console.WriteLine(x);
+                //send this exception as mail to admin of this app.
+                ConfigXStreamWebApplication();
+            }
         }
 
         private void ConfigServices()
@@ -188,7 +210,10 @@ namespace XStreamFast.Api
             });
         }
 
-        private void ConfigServer()
+        /// <summary>
+        /// A Method to Configure XStreamWebApplication.
+        /// </summary>
+        public void ConfigXStreamWebApplication()
         {
             //configuring the WebSockets Middleware
             //webApp.UseWebSockets();
@@ -198,22 +223,22 @@ namespace XStreamFast.Api
 
             webApp.UseSwagger();
 
-            IApiVersionDescriptionProvider provider = webApp.Services.GetRequiredService<IApiVersionDescriptionProvider>();
+            IApiVersionDescriptionProvider versionProvider = provider.GetRequiredService<IApiVersionDescriptionProvider>();
 
             webApp.UseSwaggerUI(options =>
             {
-                foreach (var description in provider.ApiVersionDescriptions)
+                foreach (var description in versionProvider.ApiVersionDescriptions)
                 {
                     options.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", description.GroupName.ToUpperInvariant());
                 }
             });
 
-            if (iWebHostEnvironment.IsDevelopment())
+            if (hostEnvironment.IsDevelopment())
             {
                 webApp.UseDeveloperExceptionPage();
             }
 
-            if (!iWebHostEnvironment.IsDevelopment())
+            if (!hostEnvironment.IsDevelopment())
             {
                 // adds a new middleware for using HSTS.
                 webApp.UseHsts(); // HTTP Strict Transport Security!!!
@@ -225,6 +250,7 @@ namespace XStreamFast.Api
 
             //enforce additional security layer for Https requests only.
             webApp.UseMiddleware<HttpsRefererMiddleware>();
+            //webApp.UseMiddleware<ApiLoggingMiddleware>();
 
             webApp.UseAuthorization();
 
