@@ -27,6 +27,9 @@ namespace XStreamFast.Api
         /// <returns></returns>
         public async Task InvokeAsync(HttpContext context)
         {
+            // Record the start time
+            DateTime startTime = DateTime.UtcNow;
+
             // Log request details
             var requestLog = await LogRequest(context);
 
@@ -35,19 +38,59 @@ namespace XStreamFast.Api
             using var responseBodyStream = new MemoryStream();
             context.Response.Body = responseBodyStream;
 
-            // Proceed to the next middleware
-            await _next(context);
+            try
+            {
+                // Proceed to the next middleware
+                await _next(context);
+            }
+            catch (Exception x)
+            {
+                await XStreamFastLoggers.WriteExceptionLog(x, $"Exception Occured for procsssing this Api [@Request Call] Endpoint => : {requestLog.Endpoint}");
+            }
+            finally
+            {
+                // Record the end time
+                DateTime endTime = DateTime.UtcNow;
 
-            // Log response details
-            await LogResponse(context, requestLog);
+                // Calculate the processing time
+                TimeSpan processingTime = endTime - startTime;
 
-            // Copy the intercepted response body back to the original response body stream
-            await responseBodyStream.CopyToAsync(originalResponseBodyStream);
+                // Log response details
+                await LogResponse(context, requestLog, processingTime);
+
+                // Copy the intercepted response body back to the original response body stream
+                await responseBodyStream.CopyToAsync(originalResponseBodyStream);
+            }
+
         }
 
         private async Task<RequestLog> LogRequest(HttpContext context)
         {
+
             HttpRequest request = context.Request;
+
+            string strClientIpAddress = context.Connection.RemoteIpAddress.ToString();
+
+            string correlationId = context.Request.Headers["Correlation-ID"].FirstOrDefault();
+
+            if (string.IsNullOrEmpty(correlationId))
+            {
+                correlationId = Guid.NewGuid().ToString();
+            }
+
+            string userAgent = context.Request.Headers["User-Agent"].FirstOrDefault(); // which device and application makes this request browser, mobile etc..
+
+            string userIdentity = context.User.Identity.IsAuthenticated ? context.User.Identity.Name : "Anonymous";
+
+            string queryParameters = "No Query Parameters";
+
+            if (request.Query.Count > 0)
+            {
+                foreach (var item in request.Query)
+                {
+                    queryParameters = $"Key[{item.Key}]" + ":" + $"Value[{item.Value}]";
+                }
+            }
 
             var requestLog = new RequestLog
             {
@@ -68,8 +111,9 @@ namespace XStreamFast.Api
             return requestLog;
         }
 
-        private async Task LogResponse(HttpContext context, RequestLog requestLog)
+        private async Task LogResponse(HttpContext context, RequestLog requestLog, TimeSpan totalTimeTaken)
         {
+
             HttpResponse response = context.Response;
 
             // Log HTTP method, endpoint, headers, status code, and response body
@@ -81,6 +125,8 @@ namespace XStreamFast.Api
                 StatusCode = response.StatusCode,
                 Body = await ReadResponseBodyAsync(response)
             };
+
+            string strTotalTimeTakenForProcessing = totalTimeTaken.ToString();
 
             string strHttpMethod = responseLog.HttpMethod;
             string strHeader = JsonConvert.SerializeObject(responseLog.Headers.ToDictionary(h => h.Key, h => h.Value.ToString()));
@@ -102,11 +148,32 @@ namespace XStreamFast.Api
 
         private async Task<object> ReadResponseBodyAsync(HttpResponse response)
         {
-            response.Body.Seek(0, SeekOrigin.Begin);
-            var body = await new StreamReader(response.Body).ReadToEndAsync();
-            response.Body.Seek(0, SeekOrigin.Begin);
+            var body = "";
+            try
+            {
+                // Rewind the response body stream to the beginning
+                response.Body.Seek(0, SeekOrigin.Begin);
 
-            return !string.IsNullOrEmpty(body) ? JsonConvert.DeserializeObject(body) : null;
+                // Read the response body as a string
+                body = await new StreamReader(response.Body).ReadToEndAsync();
+
+                // Rewind the response body stream again for further processing
+                response.Body.Seek(0, SeekOrigin.Begin);
+
+                // Check if the content type is JSON
+                if (response.ContentType != null && response.ContentType.Contains("application/json"))
+                {
+                    return !string.IsNullOrEmpty(body) ? JsonConvert.DeserializeObject(body) : null;
+                }
+            }
+            catch (Exception x)
+            {
+
+                await XStreamFastLoggers.WriteExceptionLog(x, $"Exception Occured for procsssing this Api [@Response Call] StatucCode => : {response.StatusCode}");
+            }
+
+            // If not JSON, return the raw body or handle as needed
+            return body;
         }
     }
 

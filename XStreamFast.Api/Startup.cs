@@ -250,7 +250,7 @@ namespace XStreamFast.Api
 
             //enforce additional security layer for Https requests only.
             webApp.UseMiddleware<HttpsRefererMiddleware>();
-            //webApp.UseMiddleware<ApiLoggingMiddleware>();
+            webApp.UseMiddleware<ApiLoggingMiddleware>();
 
             webApp.UseAuthorization();
 

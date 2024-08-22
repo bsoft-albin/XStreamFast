@@ -12,6 +12,7 @@ namespace XStreamFast.Repositories.Implementations
             int result = 0;
             try
             {
+                throw new Exception();
                 result = await _postgresMapper.ExecuteScalarAsync<int>($"select count(*) from users where id = {id};");
             }
             catch (Exception x)
