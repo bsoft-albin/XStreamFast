@@ -29,4 +29,29 @@
         public Dictionary<string, string>? Headers { get; set; }
         public object? Body { get; set; }
     }
+
+    public class StringRequestLog
+    {
+        public string ClientIpAddress { get; set; } = "";
+        public string CorrelationId { get; set; } = "";
+        public string UserAgent { get; set; } = "";
+        public string UserIdentity { get; set; } = "";
+        public string QueryParameters { get; set; } = "";
+        public string HttpMethod { get; set; } = "";
+        public string Endpoint { get; set; } = "";
+        public string Headers { get; set; } = "";
+        public string Body { get; set; } = "";
+        public string Message { get; set; } = "";
+    }
+
+    public class StringResponseLog
+    {
+        public string HttpMethod { get; set; } = "";
+        public string Endpoint { get; set; } = "";
+        public string Headers { get; set; } = "";
+        public string Body { get; set; } = "";
+        public string TotalTimeTaken { get; set; } = "";
+        public int StatusCode { get; set; }
+        public string Message { get; set; } = "";
+    }
 }

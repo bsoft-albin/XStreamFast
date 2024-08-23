@@ -14,4 +14,8 @@
     <Folder Include="Components\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\XStreamFast.Models\XStreamFast.Models.csproj" />
+  </ItemGroup>
+
 </Project>

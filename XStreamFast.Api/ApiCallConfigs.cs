@@ -69,26 +69,63 @@ namespace XStreamFast.Api
 
             HttpRequest request = context.Request;
 
-            string strClientIpAddress = context.Connection.RemoteIpAddress.ToString();
+            StringRequestLog logRequest = new();   
 
-            string correlationId = context.Request.Headers["Correlation-ID"].FirstOrDefault();
-
-            if (string.IsNullOrEmpty(correlationId))
+            // Check for the forwarded header
+            if (context.Request.Headers.ContainsKey("X-Forwarded-For"))
             {
-                correlationId = Guid.NewGuid().ToString();
+#pragma warning disable
+                logRequest.ClientIpAddress = context.Request.Headers["X-Forwarded-For"].FirstOrDefault();
+            }
+            else
+            {
+                // Fall back to the remote IP address
+                logRequest.ClientIpAddress = context.Connection.RemoteIpAddress.ToString();
             }
 
-            string userAgent = context.Request.Headers["User-Agent"].FirstOrDefault(); // which device and application makes this request browser, mobile etc..
+            // If you want to convert IPv6 loopback to IPv4 loopback for local testing
+            if (logRequest.ClientIpAddress == "::1")
+            {
+                logRequest.ClientIpAddress = "127.0.0.1";
+            }
 
-            string userIdentity = context.User.Identity.IsAuthenticated ? context.User.Identity.Name : "Anonymous";
+            logRequest.CorrelationId = context.Request.Headers["Correlation-ID"].FirstOrDefault();
 
-            string queryParameters = "No Query Parameters";
+            if (string.IsNullOrEmpty(logRequest.CorrelationId))
+            {
+                logRequest.CorrelationId = Guid.NewGuid().ToString();
+            }
+
+            logRequest.UserAgent = context.Request.Headers["User-Agent"].FirstOrDefault(); // which device and application makes this request browser, mobile etc..
+
+            logRequest.UserIdentity = context.User.Identity.IsAuthenticated ? context.User.Identity.Name : "Anonymous";
+
+            logRequest.QueryParameters = "No Query Parameters";
 
             if (request.Query.Count > 0)
             {
+                int QueryStringCount = 0;
+
                 foreach (var item in request.Query)
                 {
-                    queryParameters = $"Key[{item.Key}]" + ":" + $"Value[{item.Value}]";
+                    QueryStringCount++;
+
+                    if (QueryStringCount == 1) {
+                        logRequest.QueryParameters = "";
+                        logRequest.QueryParameters += "{";
+                    }
+
+                    logRequest.QueryParameters += $"Key[{item.Key}]" + ":" + $"Value[{item.Value}]";
+
+                    if (QueryStringCount == request.Query.Count)
+                    {
+                        logRequest.QueryParameters += "}";
+                    }
+
+                    if (!(QueryStringCount == request.Query.Count))
+                    {
+                        logRequest.QueryParameters += "&";
+                    }
                 }
             }
 
@@ -100,13 +137,15 @@ namespace XStreamFast.Api
                 Body = await ReadRequestBodyAsync(request)
             };
 
-            string strHttpMethod = requestLog.HttpMethod;
-            string strHeader = JsonConvert.SerializeObject(requestLog.Headers.ToDictionary(h => h.Key, h => h.Value.ToString()));
-            string strBody = JsonConvert.SerializeObject(requestLog.Body);
-            string strEndpoint = $"{request.Method} {request.Path}";
+            logRequest.HttpMethod = requestLog.HttpMethod;
+            logRequest.Headers = JsonConvert.SerializeObject(requestLog.Headers.ToDictionary(h => h.Key, h => h.Value.ToString()));
+            logRequest.Body = JsonConvert.SerializeObject(requestLog.Body);
+            logRequest.Endpoint = $"{request.Method} {request.Path}";
+
+            logRequest.Message = "XStreamFast: {@RequestLog}";
 
             // Log HTTP method, endpoint, headers
-            await XStreamFastLoggers.WriteApiRequestLog(strHttpMethod, strEndpoint, strHeader, strBody, "XStreamFast: {@RequestLog}");
+            await XStreamFastLoggers.WriteApiRequestLog(logRequest);
 
             return requestLog;
         }
@@ -115,6 +154,8 @@ namespace XStreamFast.Api
         {
 
             HttpResponse response = context.Response;
+
+            StringResponseLog stringResponseLog = new();
 
             // Log HTTP method, endpoint, headers, status code, and response body
             var responseLog = new ResponseLog
@@ -126,14 +167,17 @@ namespace XStreamFast.Api
                 Body = await ReadResponseBodyAsync(response)
             };
 
-            string strTotalTimeTakenForProcessing = totalTimeTaken.ToString();
+            stringResponseLog.TotalTimeTaken = "[Hrs:Min:Sec:MSec] : " + "[" + totalTimeTaken.Hours + ":" + totalTimeTaken.Minutes + ":" + totalTimeTaken.Seconds + ":" + totalTimeTaken.Milliseconds + "]";
 
-            string strHttpMethod = responseLog.HttpMethod;
-            string strHeader = JsonConvert.SerializeObject(responseLog.Headers.ToDictionary(h => h.Key, h => h.Value.ToString()));
-            string strBody = JsonConvert.SerializeObject(responseLog.Body);
-            string strEndpoint = requestLog.Endpoint;
+            stringResponseLog.HttpMethod = responseLog.HttpMethod;
+            stringResponseLog.Headers = JsonConvert.SerializeObject(responseLog.Headers.ToDictionary(h => h.Key, h => h.Value.ToString()));
+            stringResponseLog.Body = JsonConvert.SerializeObject(responseLog.Body);
+            stringResponseLog.Endpoint = requestLog.Endpoint;
 
-            await XStreamFastLoggers.WriteApiResponseLog(strHttpMethod, strEndpoint, strHeader, strBody, responseLog.StatusCode, "XStreamFast: {@ResponseLog}");
+            stringResponseLog.StatusCode = responseLog.StatusCode;
+            stringResponseLog.Message = "XStreamFast: {@ResponseLog}";
+
+            await XStreamFastLoggers.WriteApiResponseLog(stringResponseLog);
         }
 
         private async Task<object> ReadRequestBodyAsync(HttpRequest request)

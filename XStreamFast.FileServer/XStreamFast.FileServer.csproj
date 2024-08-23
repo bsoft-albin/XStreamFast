@@ -7,11 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="ApiCallLogs\Requests\2024-08\" />
     <Folder Include="ApiCallLogs\Responses\" />
     <Folder Include="ApiCallLogs\Requests\" />
     <Folder Include="ErrorLogs\" />
-    <Folder Include="ErrorLogs\2024-08\" />
     <Folder Include="SecureFiles\" />
   </ItemGroup>
 
