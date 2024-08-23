@@ -7,8 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="ApiCallLogs\Responses\" />
-    <Folder Include="ApiCallLogs\Requests\" />
+    <Compile Remove="ApiCallLogs\**" />
+    <EmbeddedResource Remove="ApiCallLogs\**" />
+    <None Remove="ApiCallLogs\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="ApiRequestResponseLogs\Requests\" />
+    <Folder Include="ApiRequestResponseLogs\Responses\" />
     <Folder Include="ErrorLogs\" />
     <Folder Include="SecureFiles\" />
   </ItemGroup>

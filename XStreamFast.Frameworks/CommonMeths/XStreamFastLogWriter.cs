@@ -45,7 +45,7 @@ namespace XStreamFast.Frameworks.CommonMeths
 
         public static async Task WriteApiRequestLog(StringRequestLog logRequest)
         {
-            String logFolderPathWithMonthAndyear = Path.Combine(Path.Combine(_contentRootPath, "ApiCallLogs\\Requests"), DateTime.UtcNow.ToString("yyyy-MM"));
+            String logFolderPathWithMonthAndyear = Path.Combine(Path.Combine(_contentRootPath, "ApiRequestResponseLogs\\Requests"), DateTime.UtcNow.ToString("yyyy-MM"));
             // Check if the subfolder exists, create it if not
             if (!Directory.Exists(logFolderPathWithMonthAndyear))
             {
@@ -78,7 +78,7 @@ namespace XStreamFast.Frameworks.CommonMeths
 
         public static async Task WriteApiResponseLog(StringResponseLog stringResponseLog)
         {
-            String logFolderPathWithMonthAndyear = Path.Combine(Path.Combine(_contentRootPath, "ApiCallLogs\\Responses"), DateTime.UtcNow.ToString("yyyy-MM"));
+            String logFolderPathWithMonthAndyear = Path.Combine(Path.Combine(_contentRootPath, "ApiRequestResponseLogs\\Responses"), DateTime.UtcNow.ToString("yyyy-MM"));
             // Check if the subfolder exists, create it if not
             if (!Directory.Exists(logFolderPathWithMonthAndyear))
             {
